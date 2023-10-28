@@ -1,6 +1,6 @@
 const express = require('express');
 const multer = require('multer');
-const bodyParser = require('body-parser')
+const path = require('path')
 const fs = require('fs');
 
 
@@ -75,7 +75,20 @@ app.get('/files/list',(req,res)=>{
         }
       });
 });
+app.get('/files/download/:fileName', (req, res) => {
+    console.log('Download Req',req.params.fileName)
+    const fileName = req.params.fileName;
+    const filePath = path.join(__dirname, 'uploads', fileName); // Adjust the file path based on your file storage location
+  
+    // Use res.download to initiate the download
+    res.download(filePath, fileName, (err) => {
+      if (err) {
+        console.error('Error downloading file: ', err);
+        res.status(500).send('Internal Server Error');
+      }
+    });
+  });
 
 app.listen(1338,()=>{
-    console.log('Listening on port 1337')
+    console.log('Listening on port 1338')
 })
